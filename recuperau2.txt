@@ -1,0 +1,83 @@
+
+CREATE TABLE teachers(
+   id INT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(50) NOT NULL,
+   surnames VARCHAR(50) NOT NULL,
+   date_of_birth varchar(50) NOT NULL,
+   curp VARCHAR(18) NOT NULL,
+   nss VARCHAR(10) NOT NULL,
+   PRIMARY KEY(id)
+);
+
+
+CREATE TABLE students(
+   id INT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(50) NOT NULL,
+   surnames VARCHAR(50) NOT NULL,
+   date_of_birth VARCHAR(40) NOT NULL,
+   curp VARCHAR(18) NOT NULL,
+   matricula VARCHAR(10) NOT NULL,
+   PRIMARY KEY(id)
+);
+
+
+CREATE TABLE evaluations(
+   id INT NOT NULL AUTO_INCREMENT,
+   id_student INT NOT NULL,
+   id_teacher INT NOT NULL,
+   subject VARCHAR(50) NOT NULL,
+   qualification double NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_student) REFERENCES students(id),
+   FOREIGN KEY(id_teacher) REFERENCES teachers(id)
+);
+
+INSERT INTO teachers(name, surnames, date_of_birth, curp, nss) VALUES
+('Juan', 'Perez', '1990-01-01', 'PERS900101HDFRRL09', '1234567890'),
+('Maria', 'Gomez', '1990-01-01', 'GOME900101HDFRRL09', '1234567890'),
+('Pedro', 'Lopez', '1990-01-01', 'LOPE900101HDFRRL09', '1234567890'),
+('Jose', 'Martinez', '1990-01-01', 'MART900101HDFRRL09', '1234567890'),
+('Luis', 'Garcia', '1990-01-01', 'GARC900101HDFRRL09', '1234567890');
+
+INSERT INTO students(name, surnames, date_of_birth, curp, matricula) VALUES
+('cock', 'Ortiz', '2003-06-12','OIDB030612HMSRLTA!', '20213tn031');
+
+INSERT INTO evaluations(id_student, id_teacher, subject, qualification) VALUES
+(2, 1, 'Mate', 10),
+(2, 2, 'Forma', 10),
+(2, 3, 'Ingles', 3),
+(2, 4, 'Datos', 9),
+(2, 5, 'Aplicaiones', 6);
+
+
+SELECT * FROM teachers;
+
+
+SELECT * FROM students;
+
+
+SELECT * FROM evaluations;
+
+
+SELECT students.name, students.surnames, evaluations.subject, evaluations.qualification FROM students INNER JOIN
+    evaluations ON students.id = evaluations.id_student;
+
+
+SELECT teachers.name, teachers.surnames, evaluations.subject FROM teachers INNER JOIN
+    evaluations ON teachers.id = evaluations.id_teacher;
+
+
+
+SELECT teachers.name, teachers.surnames, students.name, students.surnames FROM teachers INNER JOIN
+    evaluations ON teachers.id = evaluations.id_teacher INNER JOIN
+    students ON evaluations.id_student = students.id;
+
+
+SELECT teachers.name, teachers.surnames,  students.name, students.surnames, evaluations.qualification FROM teachers INNER JOIN
+    evaluations ON teachers.id = evaluations.id_teacher INNER JOIN
+    students ON evaluations.id_student = students.id;
+
+SELECT students.name, students.surnames, evaluations.subject, evaluations.qualification FROM students INNER JOIN evaluations ON students.id = evaluations.id_student;
+
+
+SELECT students.name, students.surnames, AVG(evaluations.qualification) FROM students INNER JOIN evaluations ON students.id = evaluations.id_student GROUP BY students.name;
